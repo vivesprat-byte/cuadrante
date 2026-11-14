@@ -70,23 +70,7 @@ import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase
 import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {getFirestore,collection,doc,setDoc,onSnapshot} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 // PEGA AQUI la configuracion de tu app web de Firebase (Configuracion del proyecto > Tus apps)
-const firebaseConfig={apiKey:"// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyD3PuOSNfrfd27zLi9bwV2TVi06YVtzUWM",
-  authDomain: "cuadrante-b9adb.firebaseapp.com",
-  projectId: "cuadrante-b9adb",
-  storageBucket: "cuadrante-b9adb.firebasestorage.app",
-  messagingSenderId: "161608804194",
-  appId: "1:161608804194:web:03f238bd9f5e617cb3ee3b"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);",authDomain:"PEGA_AQUI",projectId:"PEGA_AQUI",appId:"PEGA_AQUI"};
+const firebaseConfig={apiKey:"AIzaSyD3PuOSNfrfd27zLi9bwV2TVi06YVtzUWM",authDomain:"cuadrante-b9adb.firebaseapp.com",projectId:"cuadrante-b9adb",appId:"1:161608804194:web:03f238bd9f5e617cb3ee3b"};
 const app=initializeApp(firebaseConfig),auth=getAuth(app),fs=getFirestore(app);
 const HOL={"2027-01-01":"Año Nuevo","2027-01-06":"Reyes","2027-03-26":"Viernes Santo","2027-03-29":"Lunes de Pascua","2027-05-01":"Día del Trabajo","2027-05-17":"Lunes de Pentecostés","2027-06-24":"Sant Joan","2027-09-11":"Diada de Catalunya","2027-09-24":"La Mercè","2027-10-12":"Fiesta Nacional","2027-11-01":"Todos los Santos","2027-12-06":"Constitución","2027-12-08":"Inmaculada","2027-12-25":"Navidad","2027-12-26":"Sant Esteve"};
 const P=[["Isa","#1e9e5a"],["Alberto","#f59300"],["Carlos","#2f80ed"]];
