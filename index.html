@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cuadrante 2027</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#fff;--tx:#202124;--mu:#70757a;--bd:#dadce0;--ac:#1a73e8;--sel:#e8f0fe;--hb:#fde3e0;--ht:#a3261b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1f1f1f;--tx:#e8eaed;--mu:#9aa0a6;--bd:#3c4043;--ac:#8ab4f8;--sel:#263248;--hb:#5a2a27;--ht:#ffb4ab}}
+:root[data-theme="dark"]{--bg:#1f1f1f;--tx:#e8eaed;--mu:#9aa0a6;--bd:#3c4043;--ac:#8ab4f8;--sel:#263248;--hb:#5a2a27;--ht:#ffb4ab}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 "Google Sans",Roboto,system-ui,-apple-system,"Segoe UI",sans-serif}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:8px 10px 4px}
+.top{display:flex;align-items:center;gap:2px}
+h1{flex:1;font-size:21px;font-weight:500;margin:0 0 0 6px}
+.ib{background:none;border:0;color:var(--tx);font-size:24px;line-height:1;padding:6px 10px;border-radius:50%}
+.hy{border:1px solid var(--bd);border-radius:18px;font-size:13px;padding:6px 12px;background:none;color:var(--tx);margin-left:4px}
+.row{display:flex;gap:6px;margin:6px 0;overflow-x:auto}
+.pill{font:inherit;font-size:13px;color:var(--tx);background:none;border:1px solid var(--bd);border-radius:16px;padding:5px 12px;white-space:nowrap}
+.pill.on{background:var(--sel);border-color:var(--ac);color:var(--ac);font-weight:600}
+.pill i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+.wk,#gr{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.wk{text-align:center;color:var(--mu);font-size:12px;padding:6px 0 4px;border-bottom:1px solid var(--bd)}
+#gr{border-left:1px solid var(--bd)}
+.c{border-right:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:3px 2px;overflow:hidden;min-height:64px;text-align:center}
+.g-f .c{min-height:92px}.g-w .c{min-height:140px}
+.n{display:inline-flex;width:22px;height:22px;align-items:center;justify-content:center;border-radius:50%;font-size:12px}
+.td{background:var(--ac);color:var(--bg);font-weight:700}
+.sl{background:var(--sel)}.dm{opacity:.4}
+.ch{display:block;font-size:10px;line-height:1.35;border-radius:4px;padding:1px 3px;margin-top:2px;color:#fff;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ho{background:var(--hb);color:var(--ht)}
+.ci{box-shadow:inset 0 0 0 2px #e8453c}.ci:not(.sl){background:rgba(255,193,7,.25)}
+.ch.cc{background:#e8453c;font-weight:700}
+.g-w .cc,.g-f .cc{white-space:normal}
+.g-w .ch{font-size:12px;padding:3px 5px}.g-m small{display:none}
+main{max-width:640px;margin:0 auto}
+#dt{padding:14px 14px 4px}
+.dh{font-size:16px;font-weight:500;margin-bottom:8px}
+.ev{border-left:6px solid;border-radius:6px;background:var(--sel);padding:10px 12px}
+.et{font-weight:600;font-size:16px}
+.fe{font-style:italic;margin:4px 0}
+.ev label{display:flex;gap:8px;align-items:center;margin:10px 0 2px}
+.ev input[type=text]{flex:1;min-width:0;border:0;border-bottom:1px solid var(--mu);background:transparent;color:var(--tx);font:inherit;padding:4px 2px}
+.ev input[type=checkbox]{width:26px;height:26px}
+.nt{color:var(--mu);font-size:12px;padding:6px 14px 24px}
+a.pill{text-decoration:none;display:inline-block;margin-top:12px}
+#lg{position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;align-items:center;justify-content:center}
+#lg[hidden]{display:none}.lgb{display:flex;flex-direction:column;gap:10px;width:min(320px,86vw)}
+.lgb h2{margin:0 0 6px;font-weight:500}.lgb input{font:inherit;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)}
+#er{color:#d93025;font-size:13px;margin:0}
+</style>
+</head>
+<body>
+<header>
+<div class="top"><h1 id="rng"></h1><button class="ib" id="pv" aria-label="Anterior">‹</button><button class="ib" id="nx" aria-label="Siguiente">›</button><button class="hy" id="hy">Hoy</button></div>
+<div class="row" id="vw"></div>
+<div class="row" id="who"></div>
+</header>
+<div id="lg" hidden><div class="lgb"><h2>Cuadrante 2027</h2><input id="em" type="email" placeholder="Correo" autocomplete="username"><input id="pw" type="password" placeholder="Contraseña" autocomplete="current-password"><button class="pill on" id="en">Entrar</button><p id="er"></p></div></div>
+<main>
+<div class="wk"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+<div id="gr"></div>
+<div id="dt"></div>
+<div style="padding:14px 14px 0"><button class="pill" id="ex">⬇ Exportar el cuadrante (CSV para Google Calendar)</button><button class="pill" id="so" hidden style="margin-left:8px">Cerrar sesión</button><p class="nt" style="padding:6px 0 0">El CSV se importa desde calendar.google.com en el ordenador (Configuración > Importar y exportar). Lleva los días del filtro elegido arriba.</p></div>
+<p class="nt" id="st">Conectando…</p>
+</main>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,collection,doc,setDoc,onSnapshot} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+// PEGA AQUI la configuracion de tu app web de Firebase (Configuracion del proyecto > Tus apps)
+const firebaseConfig={apiKey:"// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyD3PuOSNfrfd27zLi9bwV2TVi06YVtzUWM",
+  authDomain: "cuadrante-b9adb.firebaseapp.com",
+  projectId: "cuadrante-b9adb",
+  storageBucket: "cuadrante-b9adb.firebasestorage.app",
+  messagingSenderId: "161608804194",
+  appId: "1:161608804194:web:03f238bd9f5e617cb3ee3b"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);",authDomain:"PEGA_AQUI",projectId:"PEGA_AQUI",appId:"PEGA_AQUI"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),fs=getFirestore(app);
+const HOL={"2027-01-01":"Año Nuevo","2027-01-06":"Reyes","2027-03-26":"Viernes Santo","2027-03-29":"Lunes de Pascua","2027-05-01":"Día del Trabajo","2027-05-17":"Lunes de Pentecostés","2027-06-24":"Sant Joan","2027-09-11":"Diada de Catalunya","2027-09-24":"La Mercè","2027-10-12":"Fiesta Nacional","2027-11-01":"Todos los Santos","2027-12-06":"Constitución","2027-12-08":"Inmaculada","2027-12-25":"Navidad","2027-12-26":"Sant Esteve"};
+const P=[["Isa","#1e9e5a"],["Alberto","#f59300"],["Carlos","#2f80ed"]];
+const DN=["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
+const MN=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const DAY=864e5,B=Date.UTC(2027,0,4);
+const $=i=>document.getElementById(i);
+const key=t=>new Date(t).toISOString().slice(0,10);
+const dow=t=>(new Date(t).getUTCDay()+6)%7;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const hoy=(()=>{const k=key(Date.now());return k.startsWith("2027")?k:"2027-01-01";})();
+let N={},who=-1,vista="mes",anc=Date.parse(hoy+"T00:00:00Z"),sel=hoy,db=null,tm={},pend={},dirty=false;
+try{const w=localStorage.getItem("cuadW");if(w!==null)who=+w;}catch(e){}
+function asg(t){
+  const w=Math.floor((t-B)/(7*DAY)),wd=dow(t);
+  const p=(([0,1,2,0,1,2,2][wd]+w)%3+3)%3;
+  return[p,wd===6?11:(wd===5||HOL[key(t)])?8:2,wd];
+}
+function rango(){
+  if(vista==="week"){return[anc-dow(anc)*DAY,7];}
+  if(vista==="fort"){return[B+Math.floor((anc-B)/(14*DAY))*14*DAY,14];}
+  const d=new Date(anc),f=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),1),l=Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,0);
+  const s=f-dow(f)*DAY,e=l+(6-dow(l))*DAY;return[s,(e-s)/DAY+1];
+}
+function cell(t,dim){
+  const[p,h]=asg(t),k=key(t),no=N[k]||{},mk=no.c?" 🔄":"";
+  return`<div class="c${dim?" dm":""}${k===sel?" sl":""}${no.k?" ci":""}" data-k="${k}"><span class="n${k===hoy?" td":""}">${new Date(t).getUTCDate()}</span>`+
+    (HOL[k]?`<span class="ch ho">${HOL[k]}</span>`:"")+(no.k?`<span class="ch cc">🏥 ${esc(no.t||"Cita")}</span>`:"")+
+    (who<0||who===p?`<span class="ch" style="background:${P[p][1]}">${P[p][0]}<small> ${h}h</small>${mk}</span>`:"")+`</div>`;
+}
+function grid(){
+  const[s,n]=rango(),m=new Date(anc).getUTCMonth();let h="";
+  for(let i=0;i<n;i++){const t=s+i*DAY;h+=cell(t,vista==="mes"&&new Date(t).getUTCMonth()!==m);}
+  $("gr").className="g-"+(vista==="week"?"w":vista==="fort"?"f":"m");$("gr").innerHTML=h;
+}
+function detail(){
+  const t=Date.parse(sel+"T00:00:00Z"),[p,h,wd]=asg(t),no=N[sel]||{},d=new Date(t);
+  $("dt").innerHTML=`<div class="dh">${DN[wd]} ${d.getUTCDate()} de ${MN[d.getUTCMonth()]}</div><div class="ev" style="border-left-color:${P[p][1]}"><div class="et">${P[p][0]} (${h}h)</div>`+
+    (HOL[sel]?`<div class="fe">📅 ${HOL[sel]}</div>`:"")+
+    `<label>🔄 Camb:<input type="text" data-k="${sel}" data-f="c" value="${esc(no.c||"")}"></label>`+
+    `<label><input type="checkbox" data-k="${sel}" data-f="k"${no.k?" checked":""}>🏥 Cita / 🙋 Acomp`+
+    (no.k?`<input type="text" data-k="${sel}" data-f="t" value="${esc(no.t||"")}" placeholder="detalle">`:"")+`</label><a class="pill" data-g="${sel}" target="_blank" rel="noopener" href="${esc(gcal(sel))}">📅 Añadir a Google Calendar</a></div>`;
+}
+function head(){
+  const[s,n]=rango(),a=new Date(s),e=new Date(s+(n-1)*DAY),m=new Date(anc);
+  $("rng").textContent=vista==="mes"?MN[m.getUTCMonth()][0].toUpperCase()+MN[m.getUTCMonth()].slice(1)+" "+m.getUTCFullYear():a.getUTCDate()+" "+MN[a.getUTCMonth()].slice(0,3)+" – "+e.getUTCDate()+" "+MN[e.getUTCMonth()].slice(0,3);
+  $("vw").innerHTML=[["week","Semana"],["fort","Quincena"],["mes","Mes"]].map(([k,t])=>`<button class="pill${vista===k?" on":""}" data-v="${k}">${t}</button>`).join("");
+  $("who").innerHTML=[[-1,"Todos","var(--mu)"],...P.map((p,i)=>[i,p[0],p[1]])].map(([k,t,c])=>`<button class="pill${who===k?" on":""}" data-w="${k}"><i style="background:${c}"></i>${t}</button>`).join("");
+}
+function render(){head();grid();detail();}
+function ir(t){anc=t;sel=key(t);render();}
+function paso(dir){
+  if(vista==="week")ir(anc+7*DAY*dir);
+  else if(vista==="fort")ir(rango()[0]+14*DAY*dir);
+  else{const d=new Date(anc);ir(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+dir,1));}
+}
+function gcal(k){
+  const t=Date.parse(k+"T00:00:00Z"),[p,h]=asg(t),no=N[k]||{},f=x=>key(x).replace(/-/g,"");
+  const det=[HOL[k]?"Festivo: "+HOL[k]:"",no.c?"Camb: "+no.c:"",no.k?"Cita / Acomp"+(no.t?": "+no.t:""):""].filter(Boolean).join("\n");
+  const ti=P[p][0]+" ("+h+"h)"+(no.k?" · Cita"+(no.t?": "+no.t:""):"");
+  return"https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(ti)+"&dates="+f(t)+"/"+f(t+DAY)+"&details="+encodeURIComponent(det);
+}
+async function exportar(){
+  const q=s=>'"'+String(s).replace(/"/g,'""')+'"';
+  const rows=["Subject,Start Date,Start Time,End Date,End Time,All Day Event,Description,Location,Private"];
+  for(let t=Date.UTC(2027,0,1);t<=Date.UTC(2027,11,31);t+=DAY){
+    const[p,h]=asg(t);if(who>=0&&who!==p)continue;
+    const k=key(t),no=N[k]||{},[y,m,d]=k.split("-"),f=m+"/"+d+"/"+y;
+    const det=[HOL[k]?"Festivo: "+HOL[k]:"",no.c?"Camb: "+no.c:"",no.k?"Cita / Acomp"+(no.t?": "+no.t:""):""].filter(Boolean).join(" | ");
+    rows.push([q(P[p][0]+" ("+h+"h)"+(no.k?" · Cita"+(no.t?": "+no.t:""):"")),f,"",f,"","True",q(det),"","False"].join(","));
+  }
+  const blob=new Blob([rows.join("\r\n")],{type:"text/csv;charset=utf-8"}),l=document.createElement("a");
+  l.href=URL.createObjectURL(blob);l.download="cuadrante-2027"+(who>=0?"-"+P[who][0].toLowerCase():"")+".csv";
+  document.body.appendChild(l);l.click();l.remove();
+}
+function guarda(k,now){
+  clearTimeout(tm[k]);
+  const go=async()=>{try{if(db)await setDoc(doc(db,"notas",k),N[k]);else $("st").textContent="Sin conexión: este cambio no se comparte.";}catch(e){$("st").textContent="No se pudo guardar el cambio (¿tienes permiso de edición?).";}};
+  if(now)go();else tm[k]=setTimeout(go,600);
+}
+document.addEventListener("click",e=>{
+  const g=e.target.closest("a[data-g]");if(g){g.href=gcal(g.dataset.g);return;}
+  const c=e.target.closest(".c");
+  if(c){sel=c.dataset.k;grid();detail();return;}
+  const b=e.target.closest("button");if(!b)return;
+  if(b.id==="ex")exportar();else if(b.id==="pv")paso(-1);else if(b.id==="nx")paso(1);else if(b.id==="hy")ir(Date.parse(hoy+"T00:00:00Z"));
+  else if(b.dataset.v){vista=b.dataset.v;render();}
+  else if(b.dataset.w!==undefined){who=+b.dataset.w;try{localStorage.setItem("cuadW",who);}catch(x){}render();}
+});
+document.addEventListener("input",e=>{
+  const t=e.target;if(!t.dataset.k)return;
+  const o=N[t.dataset.k]=N[t.dataset.k]||{};
+  o[t.dataset.f]=t.type==="checkbox"?t.checked:t.value;
+  if(t.type==="checkbox"&&!t.checked)o.t="";
+  pend[t.dataset.k]=Date.now();
+  guarda(t.dataset.k,t.type==="checkbox");
+  if(t.type==="checkbox")render();else grid();
+});
+let x0=null;
+$("gr").addEventListener("touchstart",e=>{x0=e.touches[0].clientX;},{passive:true});
+$("gr").addEventListener("touchend",e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>70)paso(dx<0?1:-1);});
+document.addEventListener("focusout",()=>{if(!dirty)return;setTimeout(()=>{const a=document.activeElement;if(!(a&&a.tagName==="INPUT")){dirty=false;render();}},1500);});
+render();
+const lg=$("lg");
+onAuthStateChanged(auth,u=>{
+  if(!u){db=null;lg.hidden=false;$("so").hidden=true;$("st").textContent="";return;}
+  lg.hidden=true;$("so").hidden=false;db=fs;
+  $("st").textContent="Sesión de "+u.email+". Los cambios y citas se comparten con los tres en tiempo real.";
+  onSnapshot(collection(fs,"notas"),q=>{
+    q.docs.forEach(d=>{if(!(pend[d.id]&&Date.now()-pend[d.id]<3000))N[d.id]=d.data()||{};});
+    const a=document.activeElement;
+    if(a&&a.tagName==="INPUT"&&a.type==="text"){dirty=true;grid();return;}
+    render();
+  },()=>{$("st").textContent="Error de sincronización (¿tu correo tiene permiso?).";});
+});
+async function entrar(){
+  $("er").textContent="";
+  try{await signInWithEmailAndPassword(auth,$("em").value.trim(),$("pw").value);}
+  catch(e){$("er").textContent="Correo o contraseña incorrectos.";}
+}
+$("en").onclick=entrar;
+$("pw").addEventListener("keydown",e=>{if(e.key==="Enter")entrar();});
+$("so").onclick=()=>signOut(auth);
+</script>
+</body>
+</html>
