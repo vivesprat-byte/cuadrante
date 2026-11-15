@@ -69,7 +69,7 @@ a.pill{text-decoration:none;display:inline-block;margin-top:12px}
 <div class="wk"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
 <div id="gr"></div>
 <div id="dt"></div>
-<div style="padding:14px 14px 0"><select class="pill" id="exm"><option value="0">Enero</option><option value="1">Febrero</option><option value="2">Marzo</option><option value="3">Abril</option><option value="4">Mayo</option><option value="5">Junio</option><option value="6">Julio</option><option value="7">Agosto</option><option value="8">Septiembre</option><option value="9">Octubre</option><option value="10">Noviembre</option><option value="11">Diciembre</option><option value="all">Todo 2027</option></select> <button class="pill" id="ex">⬇ Exportar a Google Calendar</button><button class="pill" id="so" hidden style="margin-left:8px">Cerrar sesión</button><p class="nt" style="padding:6px 0 0">Elige el mes y descarga un archivo .ics solo con tus días (si solo consultas, con los de la persona elegida arriba). Crea antes un calendario nuevo en Google Calendar e impórtalo en calendar.google.com (Configuración > Importar y exportar), o ábrelo desde el móvil.</p></div>
+<div style="padding:14px 14px 0"><select class="pill" id="exm"><option value="0">Enero</option><option value="1">Febrero</option><option value="2">Marzo</option><option value="3">Abril</option><option value="4">Mayo</option><option value="5">Junio</option><option value="6">Julio</option><option value="7">Agosto</option><option value="8">Septiembre</option><option value="9">Octubre</option><option value="10">Noviembre</option><option value="11">Diciembre</option><option value="all">Todo 2027</option></select> <select class="pill" id="exp"><option value="0">Isa</option><option value="1">Alberto</option><option value="2">Carlos</option></select> <button class="pill" id="ex">⬇ Exportar a Google Calendar</button><button class="pill" id="so" hidden style="margin-left:8px">Cerrar sesión</button><p class="nt" style="padding:6px 0 0">Elige el mes y el calendario (Isa, Alberto o Carlos) y descarga un archivo .ics. Crea antes un calendario nuevo en Google Calendar e impórtalo en calendar.google.com (Configuración > Importar y exportar), o ábrelo desde el móvil.</p></div>
 <p class="nt" id="st">Conectando…</p>
 </main>
 <script type="module">
@@ -168,7 +168,7 @@ function ie(x){return String(x).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replac
 function fold(l){let o=[];while(l.length>70){o.push(l.slice(0,70));l=" "+l.slice(70);}o.push(l);return o.join("\r\n");}
 async function exportar(){
   const f=x=>key(x).replace(/-/g,""),ts=new Date().toISOString().replace(/[-:]|\.\d{3}/g,"");
-  const pp=me>=0?me:who,mv=$("exm").value,m0=mv==="all"?0:+mv,ini=Date.UTC(2027,m0,1),fin=mv==="all"?Date.UTC(2027,11,31):Date.UTC(2027,m0+1,0);
+  const pp=+$("exp").value,mv=$("exm").value,m0=mv==="all"?0:+mv,ini=Date.UTC(2027,m0,1),fin=mv==="all"?Date.UTC(2027,11,31):Date.UTC(2027,m0+1,0);
   const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Cuadrante 2027//ES","CALSCALE:GREGORIAN","X-WR-CALNAME:Cuadrante 2027"+(pp>=0?" - "+P[pp][0]:""),"X-WR-TIMEZONE:Europe/Madrid","BEGIN:VTIMEZONE","TZID:Europe/Madrid","BEGIN:STANDARD","DTSTART:19701025T030000","TZOFFSETFROM:+0200","TZOFFSETTO:+0100","RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU","END:STANDARD","BEGIN:DAYLIGHT","DTSTART:19700329T020000","TZOFFSETFROM:+0100","TZOFFSETTO:+0200","RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU","END:DAYLIGHT","END:VTIMEZONE"];
   for(let t=ini;t<=fin;t+=DAY){
     const[p,h,,hi,hf]=asg(t);if(pp>=0&&pp!==p)continue;
@@ -225,7 +225,7 @@ $("exm").value=String(new Date(anc).getUTCMonth());
 const lg=$("lg");
 onAuthStateChanged(auth,u=>{
   if(!u){db=null;lg.hidden=false;$("so").hidden=true;$("st").textContent="";return;}
-  lg.hidden=true;$("so").hidden=false;db=fs;ro=!EDIT.includes((u.email||"").toLowerCase());me=ME[(u.email||"").toLowerCase()]??-1;$("ex").textContent=me>=0?"⬇ Exportar mis días a Google Calendar":"⬇ Exportar a Google Calendar";render();
+  lg.hidden=true;$("so").hidden=false;db=fs;ro=!EDIT.includes((u.email||"").toLowerCase());me=ME[(u.email||"").toLowerCase()]??-1;$("exp").value=String(me>=0?me:(who>=0?who:0));render();
   $("st").textContent=ro?"Sesión de "+u.email+". Modo solo lectura: puedes consultar el cuadrante, pero no modificarlo.":"Sesión de "+u.email+". Los cambios y citas se comparten con los tres en tiempo real.";
   onSnapshot(collection(fs,"notas"),q=>{
     q.docs.forEach(d=>{if(!(pend[d.id]&&Date.now()-pend[d.id]<3000))N[d.id]=d.data()||{};});
