@@ -62,7 +62,7 @@ a.pill{text-decoration:none;display:inline-block;margin-top:12px}
 <div class="wk"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
 <div id="gr"></div>
 <div id="dt"></div>
-<div style="padding:14px 14px 0"><button class="pill" id="ex">⬇ Exportar el cuadrante (CSV para Google Calendar)</button><button class="pill" id="so" hidden style="margin-left:8px">Cerrar sesión</button><p class="nt" style="padding:6px 0 0">El CSV se importa desde calendar.google.com en el ordenador (Configuración > Importar y exportar). Lleva los días del filtro elegido arriba.</p></div>
+<div style="padding:14px 14px 0"><button class="pill" id="ex">⬇ Exportar el cuadrante a Google Calendar</button><button class="pill" id="so" hidden style="margin-left:8px">Cerrar sesión</button><p class="nt" style="padding:6px 0 0">Descarga un archivo .ics con los días del filtro elegido arriba. Crea antes un calendario nuevo en Google Calendar e impórtalo en calendar.google.com (Configuración > Importar y exportar), o ábrelo desde el móvil.</p></div>
 <p class="nt" id="st">Conectando…</p>
 </main>
 <script type="module">
@@ -87,7 +87,8 @@ try{const w=localStorage.getItem("cuadW");if(w!==null)who=+w;}catch(e){}
 function asg(t){
   const w=Math.floor((t-B)/(7*DAY)),wd=dow(t);
   const p=(([0,1,2,0,1,2,2][wd]+w)%3+3)%3;
-  return[p,wd===6?11:(wd===5||HOL[key(t)])?8:2,wd];
+  const H=wd===6?[11,"09:00","20:00"]:(wd===5||HOL[key(t)])?[8,"12:00","20:00"]:[2,"17:30","19:30"];
+  return[p,H[0],wd,H[1],H[2]];
 }
 function rango(){
   if(vista==="week"){return[anc-dow(anc)*DAY,7];}
@@ -107,8 +108,8 @@ function grid(){
   $("gr").className="g-"+(vista==="week"?"w":vista==="fort"?"f":"m");$("gr").innerHTML=h;
 }
 function detail(){
-  const t=Date.parse(sel+"T00:00:00Z"),[p,h,wd]=asg(t),no=N[sel]||{},d=new Date(t);
-  $("dt").innerHTML=`<div class="dh">${DN[wd]} ${d.getUTCDate()} de ${MN[d.getUTCMonth()]}</div><div class="ev" style="border-left-color:${P[p][1]}"><div class="et">${P[p][0]} (${h}h)</div>`+
+  const t=Date.parse(sel+"T00:00:00Z"),[p,h,wd,hi,hf]=asg(t),no=N[sel]||{},d=new Date(t);
+  $("dt").innerHTML=`<div class="dh">${DN[wd]} ${d.getUTCDate()} de ${MN[d.getUTCMonth()]}</div><div class="ev" style="border-left-color:${P[p][1]}"><div class="et">${P[p][0]} (${h}h)</div><div class="fe" style="font-style:normal">🕒 ${hi}–${hf}</div>`+
     (HOL[sel]?`<div class="fe">📅 ${HOL[sel]}</div>`:"")+
     `<label>🔄 Camb:<input type="text" data-k="${sel}" data-f="c" value="${esc(no.c||"")}"></label>`+
     `<label><input type="checkbox" data-k="${sel}" data-f="k"${no.k?" checked":""}>🏥 Cita / 🙋 Acomp`+
@@ -128,22 +129,28 @@ function paso(dir){
   else{const d=new Date(anc);ir(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+dir,1));}
 }
 function gcal(k){
-  const t=Date.parse(k+"T00:00:00Z"),[p,h]=asg(t),no=N[k]||{},f=x=>key(x).replace(/-/g,"");
+  const t=Date.parse(k+"T00:00:00Z"),[p,h,,hi,hf]=asg(t),no=N[k]||{},f=x=>key(x).replace(/-/g,"");
   const det=[HOL[k]?"Festivo: "+HOL[k]:"",no.c?"Camb: "+no.c:"",no.k?"Cita / Acomp"+(no.t?": "+no.t:""):""].filter(Boolean).join("\n");
   const ti=P[p][0]+" ("+h+"h)"+(no.k?" · Cita"+(no.t?": "+no.t:""):"");
-  return"https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(ti)+"&dates="+f(t)+"/"+f(t+DAY)+"&details="+encodeURIComponent(det);
+  return"https://calendar.google.com/calendar/render?action=TEMPLATE&text="+encodeURIComponent(ti)+"&dates="+f(t)+"T"+hi.replace(":","")+"00/"+f(t)+"T"+hf.replace(":","")+"00&ctz=Europe/Madrid"+"&details="+encodeURIComponent(det);
 }
+function ie(x){return String(x).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/\r?\n/g,"\\n");}
+function fold(l){let o=[];while(l.length>70){o.push(l.slice(0,70));l=" "+l.slice(70);}o.push(l);return o.join("\r\n");}
 async function exportar(){
-  const q=s=>'"'+String(s).replace(/"/g,'""')+'"';
-  const rows=["Subject,Start Date,Start Time,End Date,End Time,All Day Event,Description,Location,Private"];
+  const f=x=>key(x).replace(/-/g,""),ts=new Date().toISOString().replace(/[-:]|\.\d{3}/g,"");
+  const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Cuadrante 2027//ES","CALSCALE:GREGORIAN","X-WR-CALNAME:Cuadrante 2027","X-WR-TIMEZONE:Europe/Madrid"];
   for(let t=Date.UTC(2027,0,1);t<=Date.UTC(2027,11,31);t+=DAY){
-    const[p,h]=asg(t);if(who>=0&&who!==p)continue;
-    const k=key(t),no=N[k]||{},[y,m,d]=k.split("-"),f=m+"/"+d+"/"+y;
-    const det=[HOL[k]?"Festivo: "+HOL[k]:"",no.c?"Camb: "+no.c:"",no.k?"Cita / Acomp"+(no.t?": "+no.t:""):""].filter(Boolean).join(" | ");
-    rows.push([q(P[p][0]+" ("+h+"h)"+(no.k?" · Cita"+(no.t?": "+no.t:""):"")),f,"",f,"","True",q(det),"","False"].join(","));
+    const[p,h,,hi,hf]=asg(t);if(who>=0&&who!==p)continue;
+    const k=key(t),no=N[k]||{};
+    const det=[HOL[k]?"Festivo: "+HOL[k]:"",no.c?"Camb: "+no.c:"",no.k?"Cita / Acomp"+(no.t?": "+no.t:""):""].filter(Boolean).join("\n");
+    L.push("BEGIN:VEVENT","UID:"+k+"-"+P[p][0].toLowerCase()+"@cuadrante2027","DTSTAMP:"+ts,"DTSTART;TZID=Europe/Madrid:"+f(t)+"T"+hi.replace(":","")+"00","DTEND;TZID=Europe/Madrid:"+f(t)+"T"+hf.replace(":","")+"00",
+      "SUMMARY:"+ie(P[p][0]+" ("+h+"h)"+(no.k?" · Cita"+(no.t?": "+no.t:""):"")));
+    if(det)L.push("DESCRIPTION:"+ie(det));
+    L.push("END:VEVENT");
   }
-  const blob=new Blob([rows.join("\r\n")],{type:"text/csv;charset=utf-8"}),l=document.createElement("a");
-  l.href=URL.createObjectURL(blob);l.download="cuadrante-2027"+(who>=0?"-"+P[who][0].toLowerCase():"")+".csv";
+  L.push("END:VCALENDAR");
+  const blob=new Blob([L.map(fold).join("\r\n")+"\r\n"],{type:"text/calendar;charset=utf-8"}),l=document.createElement("a");
+  l.href=URL.createObjectURL(blob);l.download="cuadrante-2027"+(who>=0?"-"+P[who][0].toLowerCase():"")+".ics";
   document.body.appendChild(l);l.click();l.remove();
 }
 function guarda(k,now){
