@@ -69,7 +69,7 @@ a.pill{text-decoration:none;display:inline-block;margin-top:12px}
 <div class="wk"><span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
 <div id="gr"></div>
 <div id="dt"></div>
-<div style="padding:14px 14px 0"><button class="pill" id="ex">⬇ Exportar el cuadrante a Google Calendar</button><button class="pill" id="so" hidden style="margin-left:8px">Cerrar sesión</button><p class="nt" style="padding:6px 0 0">Descarga un archivo .ics con los días del filtro elegido arriba. Crea antes un calendario nuevo en Google Calendar e impórtalo en calendar.google.com (Configuración > Importar y exportar), o ábrelo desde el móvil.</p></div>
+<div style="padding:14px 14px 0"><select class="pill" id="exm"><option value="0">Enero</option><option value="1">Febrero</option><option value="2">Marzo</option><option value="3">Abril</option><option value="4">Mayo</option><option value="5">Junio</option><option value="6">Julio</option><option value="7">Agosto</option><option value="8">Septiembre</option><option value="9">Octubre</option><option value="10">Noviembre</option><option value="11">Diciembre</option><option value="all">Todo 2027</option></select> <button class="pill" id="ex">⬇ Exportar a Google Calendar</button><button class="pill" id="so" hidden style="margin-left:8px">Cerrar sesión</button><p class="nt" style="padding:6px 0 0">Elige el mes y descarga un archivo .ics con los días de la persona elegida arriba (o de las tres si pone Todos). Crea antes un calendario nuevo en Google Calendar e impórtalo en calendar.google.com (Configuración > Importar y exportar), o ábrelo desde el móvil.</p></div>
 <p class="nt" id="st">Conectando…</p>
 </main>
 <script type="module">
@@ -136,7 +136,7 @@ function head(){
   $("who").innerHTML=[[-1,"Todos","var(--mu)"],...P.map((p,i)=>[i,p[0],p[1]])].map(([k,t,c])=>`<button class="pill${who===k?" on":""}" data-w="${k}"><i style="background:${c}"></i>${t}</button>`).join("");
 }
 function render(){head();grid();detail();}
-function ir(t){anc=t;sel=key(t);tmpY=-1;tmpE="";swMsg="";render();}
+function ir(t){anc=t;sel=key(t);tmpY=-1;tmpE="";swMsg="";render();$("exm").value=String(new Date(anc).getUTCMonth());}
 function paso(dir){
   if(vista==="week")ir(anc+7*DAY*dir);
   else if(vista==="fort")ir(rango()[0]+14*DAY*dir);
@@ -168,8 +168,9 @@ function ie(x){return String(x).replace(/\\/g,"\\\\").replace(/;/g,"\\;").replac
 function fold(l){let o=[];while(l.length>70){o.push(l.slice(0,70));l=" "+l.slice(70);}o.push(l);return o.join("\r\n");}
 async function exportar(){
   const f=x=>key(x).replace(/-/g,""),ts=new Date().toISOString().replace(/[-:]|\.\d{3}/g,"");
-  const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Cuadrante 2027//ES","CALSCALE:GREGORIAN","X-WR-CALNAME:Cuadrante 2027","X-WR-TIMEZONE:Europe/Madrid"];
-  for(let t=Date.UTC(2027,0,1);t<=Date.UTC(2027,11,31);t+=DAY){
+  const mv=$("exm").value,m0=mv==="all"?0:+mv,ini=Date.UTC(2027,m0,1),fin=mv==="all"?Date.UTC(2027,11,31):Date.UTC(2027,m0+1,0);
+  const L=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Cuadrante 2027//ES","CALSCALE:GREGORIAN","X-WR-CALNAME:Cuadrante 2027","X-WR-TIMEZONE:Europe/Madrid","BEGIN:VTIMEZONE","TZID:Europe/Madrid","BEGIN:STANDARD","DTSTART:19701025T030000","TZOFFSETFROM:+0200","TZOFFSETTO:+0100","RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU","END:STANDARD","BEGIN:DAYLIGHT","DTSTART:19700329T020000","TZOFFSETFROM:+0100","TZOFFSETTO:+0200","RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU","END:DAYLIGHT","END:VTIMEZONE"];
+  for(let t=ini;t<=fin;t+=DAY){
     const[p,h,,hi,hf]=asg(t);if(who>=0&&who!==p)continue;
     const k=key(t),no=N[k]||{};
     const det=[HOL[k]?"Festivo: "+HOL[k]:"",no.c?"Camb: "+no.c:"",no.k?"Cita / Acomp"+(no.t?": "+no.t:""):""].filter(Boolean).join("\n");
@@ -180,7 +181,7 @@ async function exportar(){
   }
   L.push("END:VCALENDAR");
   const blob=new Blob([L.map(fold).join("\r\n")+"\r\n"],{type:"text/calendar;charset=utf-8"}),l=document.createElement("a");
-  l.href=URL.createObjectURL(blob);l.download="cuadrante-2027"+(who>=0?"-"+P[who][0].toLowerCase():"")+".ics";
+  l.href=URL.createObjectURL(blob);l.download="cuadrante-2027"+(mv==="all"?"":"-"+MN[m0])+(who>=0?"-"+P[who][0].toLowerCase():"")+".ics";
   document.body.appendChild(l);l.click();l.remove();
 }
 function guarda(k,now){
@@ -220,6 +221,7 @@ $("gr").addEventListener("touchstart",e=>{x0=e.touches[0].clientX;},{passive:tru
 $("gr").addEventListener("touchend",e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>70)paso(dx<0?1:-1);});
 document.addEventListener("focusout",()=>{if(!dirty)return;setTimeout(()=>{const a=document.activeElement;if(!(a&&a.tagName==="INPUT")){dirty=false;render();}},1500);});
 render();
+$("exm").value=String(new Date(anc).getUTCMonth());
 const lg=$("lg");
 onAuthStateChanged(auth,u=>{
   if(!u){db=null;lg.hidden=false;$("so").hidden=true;$("st").textContent="";return;}
